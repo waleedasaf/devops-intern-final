@@ -1,0 +1,47 @@
+Loki Setup Notes
+================
+
+1. How Loki was started (local Docker, single-binary mode):
+
+   docker run -d --name=loki -p 3100:3100 \
+     grafana/loki:2.9.0 -config.file=/etc/loki/local-config.yaml
+
+   Optional - run Grafana alongside it so the logs can be visualized:
+
+   docker run -d --name=grafana -p 3000:3000 grafana/grafana:latest
+
+   Then in Grafana (http://localhost:3000, default login admin/admin):
+     - Add a new Data Source -> Loki
+     - Set URL to http://localhost:3100
+     - Save & Test
+
+2. Log forwarding setup (container logs -> Loki):
+
+   Docker's Loki logging driver was used to ship the hello.py
+   container's stdout/stderr straight to Loki:
+
+   docker run --log-driver=loki \
+     --log-opt loki-url="http://localhost:3100/loki/api/v1/push" \
+     --log-opt loki-external-labels="job=hello-devops" \
+     devops-intern-final:latest
+
+   (The Loki Docker driver plugin must be installed first:
+   docker plugin install grafana/loki-docker-driver:latest --alias loki
+   --grant-all-permissions)
+
+   For Nomad-deployed jobs, the same idea applies by pointing the
+   task's logging configuration (or a Promtail sidecar/agent reading
+   the Nomad allocation log directory) at the Loki push endpoint
+   above so `nomad job run hello.nomad` logs land in Loki too.
+
+3. Command used to view logs:
+
+   Via LogCLI:
+     logcli query '{job="hello-devops"}' --addr="http://localhost:3100"
+
+   Via Grafana:
+     Explore tab -> select Loki data source -> query {job="hello-devops"}
+
+   Via raw API:
+     curl -G -s "http://localhost:3100/loki/api/v1/query_range" \
+       --data-urlencode 'query={job="hello-devops"}'
