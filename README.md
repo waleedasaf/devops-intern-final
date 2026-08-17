@@ -31,8 +31,8 @@ python hello.py
 [github.com/waleedasaf/devops-intern-final](https://github.com/waleedasaf/devops-intern-final)
 showing `README.md`, `hello.py`, and the rest of the project files.
 
-*(Add a screenshot of the GitHub repo file listing here —
-`screenshots/github-repo.png` — before submitting.)*
+<img width="1844" height="933" alt="github-repo" src="https://github.com/user-attachments/assets/ad531fad-b1a4-4715-adb8-d3011da557c6" />
+
 
 ---
 
