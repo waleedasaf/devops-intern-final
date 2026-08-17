@@ -13,7 +13,8 @@ job "hello" {
       driver = "docker"
 
       config {
-        image = "devops-intern-final:latest"
+        image = "localhost:5000/devops-intern-final:latest"
+        force_pull = false
       }
 
       resources {

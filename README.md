@@ -27,6 +27,13 @@ Run it directly:
 python hello.py
 ```
 
+**Proof:** public repository at
+[github.com/waleedasaf/devops-intern-final](https://github.com/waleedasaf/devops-intern-final)
+showing `README.md`, `hello.py`, and the rest of the project files.
+
+*(Add a screenshot of the GitHub repo file listing here —
+`screenshots/github-repo.png` — before submitting.)*
+
 ---
 
 ## 2. Linux & Scripting Basics
@@ -50,17 +57,21 @@ Sample output:
 ===== System Info =====
 
 --- Current User ---
-claude
+devopswaleed
 
 --- Current Date ---
-Wed Aug 12 21:13:01 UTC 2026
+Mon Aug 17 08:13:01 PM PKT 2026
 
 --- Disk Usage ---
 Filesystem      Size  Used Avail Use% Mounted on
-/dev/vda        252G  8.6G   10G  47% /
+tmpfs           3.2G  3.0M  3.2G   1% /run
+/dev/nvme0n1p5  343G   81G  245G  25% /
+...
 
 ========================
 ```
+
+![sysinfo.sh output](screenshots/sysinfo-output.png)
 
 ---
 
@@ -88,8 +99,7 @@ Expected output:
 Hello, DevOps!
 ```
 
-*(Add a screenshot of the `docker run` output here once you've built it
-locally.)*
+![docker build and run output](screenshots/docker-build-run.png)
 
 ---
 
@@ -102,9 +112,9 @@ locally.)*
 3. Runs `python hello.py`
 4. Runs `scripts/sysinfo.sh`
 
-The badge at the top of this README reflects the latest run status. After
-pushing this repo to GitHub, replace `YOUR_USERNAME` in the badge URL above
-with your actual GitHub username so it points at your workflow.
+The badge at the top of this README reflects the latest run status.
+
+![GitHub Actions CI run succeeded](screenshots/github-actions-ci.png)
 
 ---
 
@@ -130,6 +140,17 @@ nomad job status hello
 nomad alloc logs <ALLOC_ID>
 ```
 
+![nomad job run — deployment succeeded](screenshots/nomad-job-run.png)
+
+> **Note:** because `hello.py` prints one line and exits immediately, a
+> `service`-type Nomad job will keep restarting the allocation after the
+> first successful run (Nomad expects a service task to stay running).
+> The screenshot above captures the initial successful deployment; the
+> restart behavior on later runs is expected given the one-shot nature of
+> `hello.py` rather than an actual failure of the pipeline. For a
+> production job you'd either use `type = "batch"` for one-shot tasks or
+> change `hello.py` to run as a long-lived process.
+
 ---
 
 ## 6. Monitoring with Grafana Loki
@@ -143,8 +164,7 @@ write-up, which covers:
 - The exact commands used to query and view logs (via `logcli`, the
   Grafana Explore UI, or the raw Loki HTTP API)
 
-*(Optional: add a Grafana Explore screenshot here showing `Hello, DevOps!`
-log lines flowing into Loki.)*
+![Grafana Explore showing Hello, DevOps! log line via Loki](screenshots/grafana-loki-logs.png)
 
 ---
 
@@ -158,6 +178,8 @@ pip install mlflow
 python mlflow/dummy_experiment.py
 mlflow ui   # open http://localhost:5000 to view the run
 ```
+
+![MLflow run overview showing logged metrics and parameters](screenshots/mlflow-run.png)
 
 ---
 
@@ -177,8 +199,16 @@ devops-intern-final/
 │   └── hello.nomad
 ├── monitoring/
 │   └── loki_setup.txt
-└── mlflow/
-    └── dummy_experiment.py
+├── mlflow/
+│   └── dummy_experiment.py
+└── screenshots/
+    ├── github-repo.png
+    ├── sysinfo-output.png
+    ├── docker-build-run.png
+    ├── github-actions-ci.png
+    ├── nomad-job-run.png
+    ├── grafana-loki-logs.png
+    └── mlflow-run.png
 ```
 
 ## How to Run Everything End-to-End
